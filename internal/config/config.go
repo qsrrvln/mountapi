@@ -28,7 +28,7 @@ func LoadConfig() (config Config, err error) {
 	viper.SetDefault("DB_NAME", "ubah-ini")
 	viper.SetDefault("DB_PORT", "5432")
 	viper.SetDefault("SERVER_PORT", "8080")
-	viper.SetDefault("SERVER_PORT", "8080")
+	viper.BindEnv("SERVER_PORT", "PORT") // Bind PORT (Railway/Heroku standard) to SERVER_PORT
 	viper.SetDefault("API_KEY", "ubah-ini")
 	viper.SetDefault("DB_SSL_MODE", "disable")
 
