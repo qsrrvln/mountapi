@@ -1,0 +1,9 @@
+# Deny all by default
+*
+
+# Whitelist files/directories
+!go.mod
+!go.sum
+!cmd/
+!internal/
+!docs/

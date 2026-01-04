@@ -1,6 +1,9 @@
 package config
 
 import (
+	"os"
+	"strings"
+
 	"github.com/spf13/viper"
 )
 
@@ -12,6 +15,7 @@ type Config struct {
 	DBPort     string `mapstructure:"DB_PORT"`
 	ServerPort string `mapstructure:"SERVER_PORT"`
 	APIKey     string `mapstructure:"API_KEY"`
+	DBSSLMode  string `mapstructure:"DB_SSL_MODE"`
 }
 
 func LoadConfig() (config Config, err error) {
@@ -24,7 +28,9 @@ func LoadConfig() (config Config, err error) {
 	viper.SetDefault("DB_NAME", "ubah-ini")
 	viper.SetDefault("DB_PORT", "5432")
 	viper.SetDefault("SERVER_PORT", "8080")
+	viper.SetDefault("SERVER_PORT", "8080")
 	viper.SetDefault("API_KEY", "ubah-ini")
+	viper.SetDefault("DB_SSL_MODE", "disable")
 
 	err = viper.ReadInConfig()
 	// It's okay if config file doesn't exist, we fallback to env vars or defaults
@@ -33,5 +39,18 @@ func LoadConfig() (config Config, err error) {
 	}
 
 	err = viper.Unmarshal(&config)
+
+	// Helper function to read secret from file if the _FILE env var is set
+	readSecret := func(envVar, fileEnvVar string, target *string) {
+		if fileVal := viper.GetString(fileEnvVar); fileVal != "" {
+			if content, err := os.ReadFile(fileVal); err == nil {
+				*target = strings.TrimSpace(string(content))
+			}
+		}
+	}
+
+	readSecret("DB_PASSWORD", "DB_PASSWORD_FILE", &config.DBPassword)
+	readSecret("API_KEY", "API_KEY_FILE", &config.APIKey)
+
 	return
 }

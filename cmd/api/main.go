@@ -44,6 +44,14 @@ func main() {
 
 	// 4. Setup Router
 	r := gin.Default()
+	// Fix "You trusted all proxies" warning.
+	// specific proxies should be set if behind a load balancer (e.g. Railway's proxy)
+	r.SetTrustedProxies(nil)
+
+	// Health Check
+	r.GET("/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{"status": "ok"})
+	})
 
 	// Public Group
 	mountainHandler := handlers.NewMountainHandler(db)
