@@ -8,14 +8,15 @@ import (
 )
 
 type Config struct {
-	DBHost     string `mapstructure:"DB_HOST"`
-	DBUser     string `mapstructure:"DB_USER"`
-	DBPassword string `mapstructure:"DB_PASSWORD"`
-	DBName     string `mapstructure:"DB_NAME"`
-	DBPort     string `mapstructure:"DB_PORT"`
-	ServerPort string `mapstructure:"SERVER_PORT"`
-	APIKey     string `mapstructure:"API_KEY"`
-	DBSSLMode  string `mapstructure:"DB_SSL_MODE"`
+	DBHost      string `mapstructure:"DB_HOST"`
+	DBUser      string `mapstructure:"DB_USER"`
+	DBPassword  string `mapstructure:"DB_PASSWORD"`
+	DBName      string `mapstructure:"DB_NAME"`
+	DBPort      string `mapstructure:"DB_PORT"`
+	ServerPort  string `mapstructure:"SERVER_PORT"`
+	APIKey      string `mapstructure:"API_KEY"`
+	DBSSLMode   string `mapstructure:"DB_SSL_MODE"`
+	DatabaseURL string `mapstructure:"DATABASE_URL"`
 }
 
 func LoadConfig() (config Config, err error) {
@@ -29,6 +30,7 @@ func LoadConfig() (config Config, err error) {
 	viper.SetDefault("DB_PORT", "5432")
 	viper.SetDefault("SERVER_PORT", "8080")
 	viper.BindEnv("SERVER_PORT", "PORT") // Bind PORT (Railway/Heroku standard) to SERVER_PORT
+	viper.BindEnv("DATABASE_URL")        // Auto-bind DATABASE_URL
 	viper.SetDefault("API_KEY", "ubah-ini")
 	viper.SetDefault("DB_SSL_MODE", "disable")
 
